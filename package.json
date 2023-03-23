@@ -1,6 +1,6 @@
 {
   "name": "scandog",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "scandog",
   "author": "michiharu",
   "license": "MIT",
@@ -13,12 +13,8 @@
     "url": "https://github.com/michiharu/prepare-spec/issues"
   },
   "keywords": [
-    "some",
-    "keywords",
-    "to",
-    "describe",
-    "the",
-    "package"
+    "Jest",
+    "Storybook"
   ],
   "type": "module",
   "bin": "dist/index.js",
@@ -33,6 +29,7 @@
     "lint": "eslint ./src",
     "sort": "npx sort-package-json",
     "test": "jest",
+    "cli-test": "yarn build && node dist/index.js",
     "test:watch": "jest --watchAll"
   },
   "dependencies": {

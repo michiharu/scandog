@@ -1,9 +1,9 @@
-#!/usr/bin/env vite-node --script
+#!/usr/bin/env node
 
 import { globbySync } from 'globby';
 import fs from 'node:fs';
 import { format, parse } from 'node:path';
-import Reporter from './reporter';
+import Reporter from './reporter.js';
 
 function getWithSuffix(path: string, suffix: string) {
   const { root, dir, name, ext } = parse(path);
@@ -11,6 +11,7 @@ function getWithSuffix(path: string, suffix: string) {
 }
 
 const isTarget = (suffix: string) => (path: string) => {
+  if (path.includes('node_modules')) return false;
   const { name } = parse(path);
   return !name.includes(suffix);
 };
@@ -33,7 +34,8 @@ function scan(patterns: string[], suffix: string) {
 }
 
 function showVersion() {
-  const json = fs.readFileSync(new URL('package.json', import.meta.url), 'utf8');
+  console.log(JSON.stringify(process.env, undefined, 2));
+  const json = fs.readFileSync(new URL('package.json', process.env.npm_package_version), 'utf8');
   const { name, version } = JSON.parse(json);
   console.log(`${name} ${version}`);
 }
