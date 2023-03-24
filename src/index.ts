@@ -2,12 +2,13 @@
 
 import { globbySync } from 'globby';
 import fs from 'node:fs';
-import { format, parse } from 'node:path';
+import { parse } from 'node:path';
 import Reporter from './reporter.js';
 
 function getWithSuffix(path: string, suffix: string) {
-  const { root, dir, name, ext } = parse(path);
-  return format({ root, dir, name: `${name}.${suffix}`, ext });
+  const { dir, name, ext } = parse(path);
+  if (dir === '') return `${name}${suffix}${ext}`;
+  return `${dir}/${name}${suffix}${ext}`;
 }
 
 const isTarget = (suffix: string) => (path: string) => {
@@ -35,14 +36,15 @@ function scan(patterns: string[], suffix: string) {
 
 function showVersion() {
   console.log(JSON.stringify(process.env, undefined, 2));
-  const json = fs.readFileSync(new URL('package.json', process.env.npm_package_version), 'utf8');
+  const json = fs.readFileSync(new URL('package.json', import.meta.url), 'utf8');
   const { name, version } = JSON.parse(json);
   console.log(`${name} ${version}`);
 }
 
 function showHelpInformation() {
-  console.log(
-    `Usage: scandog [suffix] [file/glob ...]
+  console.log(`
+Usage: scandog [suffix] [file/glob ...]
+   ex. scandog .spec src/**/*.ts
 
 Verify that all files matching a given suffix have been correctly identified by the provided glob pattern.
 The default glob is "**/*.{js,jsx,ts,tsx}".
@@ -51,8 +53,7 @@ check that for each ".ts" file matching the glob expression, there exists a corr
 
   -h, --help     Display this help
   -v, --version  Display the package version
-  `
-  );
+`);
 }
 
 function run() {

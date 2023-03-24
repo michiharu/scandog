@@ -1,16 +1,16 @@
 {
   "name": "scandog",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "scandog",
   "author": "michiharu",
   "license": "MIT",
-  "homepage": "https://github.com/michiharu/prepare-spec.git",
+  "homepage": "https://github.com/michiharu/scandog",
   "repository": {
     "type": "git",
-    "url": "https://github.com/michiharu/prepare-spec.git"
+    "url": "https://github.com/michiharu/scandog.git"
   },
   "bugs": {
-    "url": "https://github.com/michiharu/prepare-spec/issues"
+    "url": "https://github.com/michiharu/scandog/issues"
   },
   "keywords": [
     "Jest",
