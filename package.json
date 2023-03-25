@@ -1,6 +1,6 @@
 {
   "name": "scandog",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "scandog",
   "author": "michiharu",
   "license": "MIT",
@@ -17,7 +17,7 @@
     "Storybook"
   ],
   "type": "module",
-  "bin": "dist/index.js",
+  "bin": "dist/cli.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

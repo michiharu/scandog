@@ -95,7 +95,7 @@ Example: scandog .spec '**/*.ts' --gitignore`
   console.log(`Found ${filesCount(results.length)}.`);
   if (errors.length !== 0) {
     const message =
-      errors.length === 1 ? '1 file does not exist.' : `${errors.length} do not exist.`;
+      errors.length === 1 ? '1 file does not exist.' : `${errors.length} files do not exist.`;
     console.log(red(message));
   }
   const existCount = results.length - errors.length;
