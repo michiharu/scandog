@@ -1,6 +1,6 @@
 {
   "name": "scandog",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "scandog",
   "author": "michiharu",
   "license": "MIT",
@@ -29,14 +29,16 @@
     "lint": "eslint ./src",
     "sort": "npx sort-package-json",
     "test": "jest",
-    "cli-test": "yarn build && node dist/index.js",
+    "test-run": "yarn build && node dist/cli.js",
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
-    "globby": "^13.1.3"
+    "globby": "^13.1.3",
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",
+    "@types/yargs": "^17.0.23",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "eslint": "^8.36.0",
