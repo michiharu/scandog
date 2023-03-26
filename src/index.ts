@@ -7,7 +7,7 @@ type ScanOptions = {
   gitignore: boolean;
 };
 
-type PathResult = {
+export type PathResult = {
   path: string;
   withSuffix: string;
   exists: boolean;

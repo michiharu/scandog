@@ -2,20 +2,23 @@
 
 import yargs from 'yargs/yargs';
 
-import scan from './index.js';
+import scan, { type PathResult } from './index.js';
 
 const filesCount = (count: number) =>
   count === 1 ? ('1 file' as const) : (`${count} files` as const);
 
-const red = (text: string) => `\x1b[31m${text}\x1b[0m`;
-const green = (text: string) => `\x1b[32m${text}\x1b[0m`;
-const bgRed = (text: string) => `\x1b[41m${text}\x1b[49m`;
-const bgGreen = (text: string) => `\x1b[42m${text}\x1b[49m`;
+const color = {
+  green: (text: string) => `\x1b[32m${text}\x1b[0m`,
+  red: (text: string) => `\x1b[31m${text}\x1b[0m`,
+};
+const bg = {
+  green: (text: string) => `\x1b[42m${text}\x1b[49m`,
+  red: (text: string) => `\x1b[41m${text}\x1b[49m`,
+};
 
-function run() {
-  const argv = yargs(process.argv.slice(2))
-    .usage(
-      `
+const command = yargs(process.argv.slice(2))
+  .usage(
+    `
 ✨Welcome to Scandog🐕
 Scandog checks if there exist files with the specified suffix for all files matching globs.
 
@@ -24,94 +27,110 @@ Please visit https://github.com/sindresorhus/globby#readme for how to write glob
 Usage: scandog <suffix> <patterns...> <options>
 
 Example: scandog .spec '**/*.ts' --gitignore`
-    )
-    .command('* <suffix> <patterns...>', false)
-    .positional('suffix', {
-      describe: 'suffix',
-      type: 'string',
-      demandOption: true,
-    })
-    .positional('patterns', {
-      describe: `glob patterns.`,
-      type: 'string',
-      array: true,
-      default: ['**/*.{js,jsx,ts,tsx}'],
-    })
-    .options({
-      gitignore: {
-        type: 'boolean',
-        describe: `This option applies ignore patterns from the gitignore file.
-        The node_modules directory is always ignored even if you don't use this option.`,
-        default: false,
-      },
-    })
-    .alias({
-      h: 'help',
-      v: 'version',
-      g: 'gitignore',
-    })
-    .demandCommand(1)
-    .parseSync();
+  )
+  .command('* <suffix> <patterns...>', false)
+  .positional('suffix', {
+    describe: 'suffix',
+    type: 'string',
+    demandOption: true,
+  })
+  .positional('patterns', {
+    describe: `glob patterns.`,
+    type: 'string',
+    array: true,
+    default: ['**/*.{js,jsx,ts,tsx}'],
+  })
+  .options({
+    gitignore: {
+      type: 'boolean',
+      describe: `This option applies ignore patterns from the gitignore file.
+    The node_modules directory is always ignored even if you don't use this option.`,
+      default: false,
+    },
+  })
+  .alias({
+    h: 'help',
+    v: 'version',
+    g: 'gitignore',
+  })
+  .demandCommand(1);
 
-  const { suffix, patterns, gitignore } = argv;
-  console.log();
-  console.log(`   suffix: ${suffix}`);
+const reportArgs = (suffix: string, patterns: string[], gitignore: boolean): string[] => {
+  const messages = [''];
+
+  messages.push(`   suffix: ${suffix}`);
   if (patterns.length === 1) {
-    console.log(`  pattern: ${patterns[0]}`);
+    messages.push(`  pattern: ${patterns[0]}`);
   } else {
-    console.log(' patterns:');
-    patterns.forEach((p) => console.log(`  - ${p}`));
+    messages.push(' patterns:');
+    patterns.forEach((p) => messages.push(`  - ${p}`));
   }
-  console.log(`gitignore: ${gitignore}`);
-  console.log();
+  messages.push(`gitignore: ${gitignore}`);
+  messages.push('');
 
-  patterns.push('!node_modules');
-  const results = scan(suffix, patterns, { gitignore });
+  return messages;
+};
 
-  const errors = results.filter(({ exists }) => !exists);
+const reportErrors = (errors: PathResult[]): string[] => {
+  const messages = [];
 
   if (errors.length === 1) {
     const { path, withSuffix } = errors[0];
-    console.error(`Does not exist: ./${withSuffix}`);
-    console.error(`               (./${path})`);
+    messages.push(`Does not exist: ./${withSuffix}`);
+    messages.push(`               (./${path})`);
   }
-
   if (errors.length > 1) {
-    console.error('List of files that do not exist:');
+    messages.push('List of files that do not exist:');
     errors.forEach(({ path, withSuffix }) => {
-      console.error(`  - ./${withSuffix}`);
-      console.error(`   (./${path})`);
+      messages.push(`  - ./${withSuffix}`);
+      messages.push(`    ./${path}`);
     });
   }
 
-  // summary
+  return messages;
+};
+
+const reportSummary = (results: PathResult[], errors: PathResult[], suffix: string): string[] => {
+  const messages = [];
+
   if (results.length === 0) {
-    console.error('\x1b[31mNo matching files.\x1b[0m');
-    process.exitCode = 2;
-    return;
+    messages.push(color.red('No matching files.'));
+    return messages;
   }
-
-  if (errors.length !== 0) console.log();
-
-  console.log(`Found ${filesCount(results.length)}.`);
+  if (errors.length !== 0) messages.push('');
+  messages.push(`Found ${filesCount(results.length)}.`);
   if (errors.length !== 0) {
     const message =
       errors.length === 1 ? '1 file does not exist.' : `${errors.length} files do not exist.`;
-    console.log(red(message));
+    messages.push(color.red(message));
   }
   const existCount = results.length - errors.length;
   if (existCount !== 0) {
     const message = existCount === 1 ? '1 file exists.' : `${existCount} files exist.`;
-    console.log(message);
+    messages.push(message);
   }
-
   if (errors.length === 0) {
-    const message = `${bgGreen('SUCCESS')} All files with "${suffix}" exist.`;
-    console.log();
-  } else {
-    process.exitCode = 1;
+    const message = `${bg.green('SUCCESS')} All files with "${suffix}" exist.`;
+    messages.push(message);
   }
-  console.log();
+  messages.push('');
+
+  return messages;
+};
+
+function run() {
+  const { suffix, patterns, gitignore } = command.parseSync();
+
+  reportArgs(suffix, patterns, gitignore).forEach((message) => console.log(message));
+
+  patterns.push('!node_modules');
+  const results = scan(suffix, patterns, { gitignore });
+  const errors = results.filter(({ exists }) => !exists);
+
+  reportErrors(errors).forEach((message) => console.error(message));
+  reportSummary(results, errors, suffix).forEach((message) => console.log(message));
+
+  if (results.length === 0 || errors.length !== 0) process.exit(1);
 }
 
 run();
