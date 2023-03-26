@@ -40,7 +40,8 @@ Example: scandog .spec '**/*.ts' --gitignore`
     .options({
       gitignore: {
         type: 'boolean',
-        describe: 'Apply ignore patterns in ".gitignore" files.',
+        describe: `This option applies ignore patterns from the gitignore file.
+        The node_modules directory is always ignored even if you don't use this option.`,
         default: false,
       },
     })

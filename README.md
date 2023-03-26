@@ -4,7 +4,7 @@ Scandog checks if there exist files with the specified suffix for all files matc
 
 ## Usage
 
-You can call scandog from npx command without installing npm.
+You can call scandog from the npx command without installing it.
 
 Scandog uses "globby" as glob engine. Please visit [globby#readme] for how to write glob.
 
