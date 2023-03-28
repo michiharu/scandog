@@ -29,12 +29,13 @@
     "build": "rm -rf dist && tsc",
     "coverage": "vitest run --coverage",
     "dev": "rm -rf dist && tsc -w",
-    "lint": "eslint ./src",
+    "fix": "yarn lint && yarn fmt && yarn sort",
     "fmt": "prettier --write ./src",
+    "lint": "eslint --fix ./src",
+    "prepublishOnly": "yarn build",
     "sort": "npx sort-package-json",
     "test": "vitest",
-    "test-run": "yarn build && node dist/cli.js",
-    "prepublishOnly": "yarn build"
+    "test-run": "yarn build && node dist/cli.js"
   },
   "dependencies": {
     "globby": "^13.1.3",
