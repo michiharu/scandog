@@ -50,7 +50,9 @@ export const reportSummary = (
 ): string[] => {
   const messages = [];
   if (errors.length !== 0) messages.push('');
-  messages.push('Summary:');
+  const result =
+    results.length !== 0 && errors.length === 0 ? bg.green(' SUCCESS ') : bg.red(' ERROR ');
+  messages.push(`Summary: ${result}`);
 
   if (results.length === 0) {
     messages.push(color.red('  No matching files.'));
@@ -68,7 +70,7 @@ export const reportSummary = (
     messages.push(message);
   }
   if (errors.length === 0) {
-    const message = `  ${bg.green('SUCCESS')} All files with "${suffix}" exist.`;
+    const message = `  All files with "${suffix}" exist.`;
     messages.push(message);
   }
   messages.push('');
