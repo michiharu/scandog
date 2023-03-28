@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { globbySync } from 'globby';
+import { existsSync } from 'node:fs';
 import yargs from 'yargs/yargs';
 
 import scan from './index.js';
@@ -50,7 +52,7 @@ function run() {
   reportArgs(suffix, patterns, gitignore).forEach((message) => console.log(message));
 
   patterns.push('!node_modules');
-  const results = scan(suffix, patterns, { gitignore });
+  const results = scan(suffix, patterns, { gitignore }, globbySync, existsSync);
   const errors = results.filter(({ exists }) => !exists);
 
   reportErrors(errors).forEach((message) => console.error(color.red(message)));

@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { parse } from 'node:path';
 
-import { globbySync } from 'globby';
+import globby from 'globby';
 
 type ScanOptions = {
   gitignore: boolean;
@@ -23,12 +23,19 @@ export function getWithSuffix(path: string, suffix: string) {
   if (dir === '') return `${name}${suffix}${ext}`;
   return `${dir}/${name}${suffix}${ext}`;
 }
-
-const scan = (suffix: string, patterns: string[], { gitignore }: ScanOptions): PathResult[] => {
-  const paths = globbySync(patterns, { gitignore }).filter(isTargetPath(suffix));
+type GlobbySync = typeof globby.globbySync;
+type ExistsSync = typeof fs.existsSync;
+const scan = (
+  suffix: string,
+  patterns: string[],
+  options: ScanOptions,
+  globbySync: GlobbySync,
+  existsSync: ExistsSync
+): PathResult[] => {
+  const paths = globbySync(patterns, options).filter(isTargetPath(suffix));
   return paths.map((path) => {
     const withSuffix = getWithSuffix(path, suffix);
-    return { path, withSuffix, exists: fs.existsSync(withSuffix) };
+    return { path, withSuffix, exists: existsSync(withSuffix) };
   });
 };
 

@@ -6,7 +6,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: ['airbnb', 'airbnb-typescript', 'prettier'],
+  extends: ['airbnb-base', 'airbnb-typescript', 'prettier'],
   settings: {
     'import/resolver': {
       typescript: { alwaysTryTypes: true },
@@ -15,4 +15,16 @@ module.exports = {
   parserOptions: {
     project: './tsconfig.eslint.json',
   },
+  rules: {
+    'react/jsx-filename-extension': 'off',
+    'import/extensions': 'off',
+  },
+  overrides: [
+    {
+      files: ['vitest.config.ts'],
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+  ],
 };
