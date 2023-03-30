@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { parse } from 'node:path';
 
-import globby from 'globby';
+import * as globby from 'globby';
 
 type ScanOptions = {
   gitignore: boolean;
