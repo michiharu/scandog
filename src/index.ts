@@ -29,8 +29,8 @@ const scan = (
   suffix: string,
   patterns: string[],
   options: ScanOptions,
-  globbySync: GlobbySync,
-  existsSync: ExistsSync
+  globbySync: GlobbySync = globby.globbySync,
+  existsSync: ExistsSync = fs.existsSync
 ): PathResult[] => {
   const paths = globbySync(patterns, options).filter(isTargetPath(suffix));
   return paths.map((path) => {
