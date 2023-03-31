@@ -5,8 +5,8 @@ export const color = {
   red: (text: string) => `\x1b[31m${text}\x1b[0m`,
 };
 export const bg = {
-  green: (text: string) => `\x1b[42m${text}\x1b[49m`,
-  red: (text: string) => `\x1b[41m${text}\x1b[49m`,
+  green: (text: string) => `\x1b[42m${text}\x1b[49m` as const,
+  red: (text: string) => `\x1b[41m${text}\x1b[49m` as const,
 };
 
 export const reportArgs = (suffix: string, patterns: string[], gitignore: boolean): string[] => {

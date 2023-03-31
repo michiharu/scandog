@@ -6,29 +6,49 @@ Scandog checks if there exist files with the specified suffix for all files matc
 
 You can call scandog from the npx command without installing it.
 
-Scandog uses "globby" as glob engine. Please visit [globby#readme] for how to write glob.
-
-[globby#readme]: https://github.com/sindresorhus/globby#readme
-
 ```bash
-npx scandog <suffix> <patterns...> <options>
+npx scandog <suffix> --patterns <patterns...> <other options>
 ```
 
-### Check spec files
+`--patterns` is required. You can use a short alias.
 
 ```bash
-npx scandog .spec '**/*.{ts,tsx}' --gitignore
+npx scandog <suffix> -p <patterns...> <other options>
 ```
 
-### Check story files
+### Basic
 
 ```bash
-npx scandog .stories '**/*.{ts,tsx}' --gitignore
+npx scandog .spec -p '**/*.{ts,tsx}'
+npx scandog .stories -p '**/*.tsx'
+```
+
+### Ignore config files　 with negated glob patterns
+
+You can use negated glob patterns.
+
+```bash
+npx scandog .spec -p '**/*.{ts,tsx}' '!*.config.ts'
+```
+
+### Ignore patterns from .gitignore
+
+You can use "-g" or "--gitignore" option to apply ignore patterns from ".gitignore" file.
+This is a useful option to ignore the "dist" or "build" directories.
+
+```bash
+npx scandog .spec -p '**/*.{js.ts}' -g
 ```
 
 ## Options
 
+### `-p`, `--patterns`
+
+Glob patterns. Scandog uses "globby" as glob engine. Please visit [globby#readme] for how to write glob.
+
+[globby#readme]: https://github.com/sindresorhus/globby#readme
+
 ### `-g`, `--gitignore`
 
-This option applies ignore patterns from the gitignore file.
+This option applies ignore patterns from ".gitignore" file.
 The node_modules directory is always ignored even if you don't use this option.

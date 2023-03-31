@@ -14,23 +14,21 @@ Scandog checks if there exist files with the specified suffix for all files matc
 
 Please visit https://github.com/sindresorhus/globby#readme for how to write glob. Scandog uses "globby" as glob engine.
 
-Usage: scandog <suffix> <patterns...> <options>
-
-Example: scandog .spec '**/*.ts' --gitignore`
+Usage: scandog .spec -p '**/*.ts' '!*.config.ts' -g`
   )
-  .command('* <suffix> <patterns...>', false)
+  .command('* <suffix>', false)
   .positional('suffix', {
-    describe: 'suffix',
+    describe: 'such as ".spec" or ".stories".',
     type: 'string',
     demandOption: true,
   })
-  .positional('patterns', {
-    describe: `glob patterns.`,
-    type: 'string',
-    array: true,
-    default: ['**/*.{js,jsx,ts,tsx}'],
-  })
   .options({
+    patterns: {
+      describe: 'Glob patterns.',
+      type: 'array',
+      string: true,
+      demandOption: true,
+    },
     gitignore: {
       type: 'boolean',
       describe: `This option applies ignore patterns from the gitignore file.
@@ -42,11 +40,13 @@ Example: scandog .spec '**/*.ts' --gitignore`
     h: 'help',
     v: 'version',
     g: 'gitignore',
+    p: 'patterns',
   })
   .demandCommand(1);
 
 function run() {
   const { suffix, patterns, gitignore } = command.parseSync();
+  if (!patterns) throw new Error();
 
   reportArgs(suffix, patterns, gitignore).forEach((message) => console.log(message));
 
