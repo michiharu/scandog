@@ -23,7 +23,7 @@ npx scandog .spec -p '**/*.{ts,tsx}'
 npx scandog .stories -p '**/*.tsx'
 ```
 
-### Ignore config files　 with negated glob patterns
+### Ignore config files with negated glob patterns
 
 You can use negated glob patterns.
 
