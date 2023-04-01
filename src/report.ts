@@ -23,7 +23,8 @@ export const reportArgs = (suffix: string, patterns: string[], gitignore: boolea
   return messages;
 };
 
-export const reportErrors = (errors: PathResult[]): string[] => {
+export const reportErrors = (results: PathResult[]): string[] => {
+  const errors = results.filter(({ exists }) => !exists);
   const messages = [];
   if (errors.length === 1) {
     const { path, withSuffix } = errors[0];
@@ -43,11 +44,8 @@ export const reportErrors = (errors: PathResult[]): string[] => {
 export const filesCount = (count: number) =>
   count === 1 ? ('1 file' as const) : (`${count} files` as const);
 
-export const reportSummary = (
-  results: PathResult[],
-  errors: PathResult[],
-  suffix: string
-): string[] => {
+export const reportSummary = (results: PathResult[], suffix: string): string[] => {
+  const errors = results.filter(({ exists }) => !exists);
   const messages = [];
   if (errors.length !== 0) messages.push('');
   const result =

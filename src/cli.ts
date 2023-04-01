@@ -52,12 +52,11 @@ function run() {
 
   patterns.push('!node_modules');
   const results = scan(suffix, patterns, { gitignore });
-  const errors = results.filter(({ exists }) => !exists);
 
-  reportErrors(errors).forEach((message) => console.error(color.red(message)));
-  reportSummary(results, errors, suffix).forEach((message) => console.log(message));
+  reportErrors(results).forEach((message) => console.error(color.red(message)));
+  reportSummary(results, suffix).forEach((message) => console.log(message));
 
-  if (results.length === 0 || errors.length !== 0) process.exit(1);
+  if (results.length === 0 || results.some(({ exists }) => !exists)) process.exit(1);
 }
 
 run();
