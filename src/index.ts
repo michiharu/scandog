@@ -3,16 +3,6 @@ import { parse } from 'node:path';
 
 import * as globby from 'globby';
 
-type ScanOptions = {
-  gitignore: boolean;
-};
-
-export type PathResult = {
-  path: string;
-  withSuffix: string;
-  exists: boolean;
-};
-
 export const isTargetPath = (suffix: string) => (path: string) => {
   const { name } = parse(path);
   return !name.endsWith(suffix);
@@ -23,8 +13,18 @@ export function getWithSuffix(path: string, suffix: string) {
   if (dir === '') return `${name}${suffix}${ext}`;
   return `${dir}/${name}${suffix}${ext}`;
 }
+
+export type PathResult = {
+  path: string;
+  withSuffix: string;
+  exists: boolean;
+};
+type ScanOptions = {
+  gitignore: boolean;
+};
 type GlobbySync = typeof globby.globbySync;
 type ExistsSync = typeof fs.existsSync;
+
 const scan = (
   suffix: string,
   patterns: string[],

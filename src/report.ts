@@ -67,9 +67,9 @@ export const reportSummary = (results: PathResult[], suffix: string): string[] =
     const message = existCount === 1 ? '  1 file exists.' : `  ${existCount} files exist.`;
     messages.push(message);
   }
-  if (errors.length === 0) {
+  if (results.length !== 0 && errors.length === 0) {
     const message = `  All files with "${suffix}" exist.`;
-    messages.push(message);
+    messages.push(color.green(message));
   }
   messages.push('');
 

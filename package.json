@@ -19,9 +19,9 @@
   "license": "MIT",
   "author": "michiharu",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "bin": "dist/cli.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": "./dist/cli.js",
   "files": [
     "/dist"
   ],
